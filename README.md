@@ -1,5 +1,5 @@
 # OpenCV
-OpenCV_android
+OpenCV_android [![](https://jitpack.io/v/zhu260824/OpenCV.svg)](https://jitpack.io/#zhu260824/OpenCV)
 
 How to
 To get a Git project into your build:
@@ -21,5 +21,4 @@ Step 2. Add the dependency
 	        implementation 'com.github.zhu260824:OpenCV:Tag'
 	}
   
-  
-[![](https://jitpack.io/v/zhu260824/OpenCV.svg)](https://jitpack.io/#zhu260824/OpenCV)
+
