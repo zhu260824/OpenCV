@@ -3,24 +3,42 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 group='com.github.zhu260824'
 
-android {
-    compileSdkVersion 28
+def openCVersionName = "4.3.0"
+def openCVersionCode = ((4 * 100 + 3) * 100 + 0) * 10 + 0
 
+println "OpenCV: " +openCVersionName + "OpenCV Code: " + openCVersionCode
+println "projectDir: " + project.projectDir.toString()
+
+android {
+    compileSdkVersion 29
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 4100
-        versionName "4.1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode openCVersionCode
+        versionName openCVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a" , "x86", "x86_64"
+        }
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_STL=c++_shared"
+                targets "opencv_jni_shared"
+            }
+        }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
         release {
+            packagingOptions {
+                doNotStrip '**/*.so'  // controlled by OpenCV CMake scripts
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -28,13 +46,20 @@ android {
 
     sourceSets {
         main {
-            aidl.srcDirs = ['src']
+            java.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/java']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path(project.projectDir.toString() + '/libcxx_helper/CMakeLists.txt')
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 // encoding
