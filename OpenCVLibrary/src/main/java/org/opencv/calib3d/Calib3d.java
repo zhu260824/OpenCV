@@ -987,7 +987,10 @@ public class Calib3d {
      * @param points2 Array of the second image points of the same size and format as points1 .
      * @param cameraMatrix Camera matrix \(K = \vecthreethree{f_x}{0}{c_x}{0}{f_y}{c_y}{0}{0}{1}\) .
      * Note that this function assumes that points1 and points2 are feature points from cameras with the
-     * same camera matrix.
+     * same camera matrix. If this assumption does not hold for your use case, use
+     * {@code undistortPoints()} with {@code P = cv::NoArray()} for both cameras to transform image points
+     * to normalized image coordinates, which are valid for the identity camera matrix. When
+     * passing these coordinates, pass the identity matrix for this parameter.
      * @param method Method for computing an essential matrix.
      * <ul>
      *   <li>
@@ -1028,7 +1031,10 @@ public class Calib3d {
      * @param points2 Array of the second image points of the same size and format as points1 .
      * @param cameraMatrix Camera matrix \(K = \vecthreethree{f_x}{0}{c_x}{0}{f_y}{c_y}{0}{0}{1}\) .
      * Note that this function assumes that points1 and points2 are feature points from cameras with the
-     * same camera matrix.
+     * same camera matrix. If this assumption does not hold for your use case, use
+     * {@code undistortPoints()} with {@code P = cv::NoArray()} for both cameras to transform image points
+     * to normalized image coordinates, which are valid for the identity camera matrix. When
+     * passing these coordinates, pass the identity matrix for this parameter.
      * @param method Method for computing an essential matrix.
      * <ul>
      *   <li>
@@ -1068,7 +1074,10 @@ public class Calib3d {
      * @param points2 Array of the second image points of the same size and format as points1 .
      * @param cameraMatrix Camera matrix \(K = \vecthreethree{f_x}{0}{c_x}{0}{f_y}{c_y}{0}{0}{1}\) .
      * Note that this function assumes that points1 and points2 are feature points from cameras with the
-     * same camera matrix.
+     * same camera matrix. If this assumption does not hold for your use case, use
+     * {@code undistortPoints()} with {@code P = cv::NoArray()} for both cameras to transform image points
+     * to normalized image coordinates, which are valid for the identity camera matrix. When
+     * passing these coordinates, pass the identity matrix for this parameter.
      * @param method Method for computing an essential matrix.
      * <ul>
      *   <li>
@@ -1107,7 +1116,10 @@ public class Calib3d {
      * @param points2 Array of the second image points of the same size and format as points1 .
      * @param cameraMatrix Camera matrix \(K = \vecthreethree{f_x}{0}{c_x}{0}{f_y}{c_y}{0}{0}{1}\) .
      * Note that this function assumes that points1 and points2 are feature points from cameras with the
-     * same camera matrix.
+     * same camera matrix. If this assumption does not hold for your use case, use
+     * {@code undistortPoints()} with {@code P = cv::NoArray()} for both cameras to transform image points
+     * to normalized image coordinates, which are valid for the identity camera matrix. When
+     * passing these coordinates, pass the identity matrix for this parameter.
      * @param method Method for computing an essential matrix.
      * <ul>
      *   <li>
@@ -1145,7 +1157,10 @@ public class Calib3d {
      * @param points2 Array of the second image points of the same size and format as points1 .
      * @param cameraMatrix Camera matrix \(K = \vecthreethree{f_x}{0}{c_x}{0}{f_y}{c_y}{0}{0}{1}\) .
      * Note that this function assumes that points1 and points2 are feature points from cameras with the
-     * same camera matrix.
+     * same camera matrix. If this assumption does not hold for your use case, use
+     * {@code undistortPoints()} with {@code P = cv::NoArray()} for both cameras to transform image points
+     * to normalized image coordinates, which are valid for the identity camera matrix. When
+     * passing these coordinates, pass the identity matrix for this parameter.
      * <ul>
      *   <li>
      *    <b>RANSAC</b> for the RANSAC algorithm.
@@ -5140,7 +5155,7 @@ public class Calib3d {
      * where \(T_i\) are components of the translation vector \(T\) : \(T=[T_0, T_1, T_2]^T\) .
      * And the function can also compute the fundamental matrix F:
      *
-     * \(F = cameraMatrix2^{-T} E cameraMatrix1^{-1}\)
+     * \(F = cameraMatrix2^{-T}\cdot E \cdot cameraMatrix1^{-1}\)
      *
      * Besides the stereo-related information, the function can also perform a full calibration of each of
      * the two cameras. However, due to the high dimensionality of the parameter space and noise in the
@@ -5300,7 +5315,7 @@ public class Calib3d {
      * where \(T_i\) are components of the translation vector \(T\) : \(T=[T_0, T_1, T_2]^T\) .
      * And the function can also compute the fundamental matrix F:
      *
-     * \(F = cameraMatrix2^{-T} E cameraMatrix1^{-1}\)
+     * \(F = cameraMatrix2^{-T}\cdot E \cdot cameraMatrix1^{-1}\)
      *
      * Besides the stereo-related information, the function can also perform a full calibration of each of
      * the two cameras. However, due to the high dimensionality of the parameter space and noise in the
@@ -5459,7 +5474,7 @@ public class Calib3d {
      * where \(T_i\) are components of the translation vector \(T\) : \(T=[T_0, T_1, T_2]^T\) .
      * And the function can also compute the fundamental matrix F:
      *
-     * \(F = cameraMatrix2^{-T} E cameraMatrix1^{-1}\)
+     * \(F = cameraMatrix2^{-T}\cdot E \cdot cameraMatrix1^{-1}\)
      *
      * Besides the stereo-related information, the function can also perform a full calibration of each of
      * the two cameras. However, due to the high dimensionality of the parameter space and noise in the
@@ -6085,6 +6100,158 @@ public class Calib3d {
      */
     public static int estimateAffine3D(Mat src, Mat dst, Mat out, Mat inliers) {
         return estimateAffine3D_2(src.nativeObj, dst.nativeObj, out.nativeObj, inliers.nativeObj);
+    }
+
+
+    //
+    // C++:  int cv::estimateTranslation3D(Mat src, Mat dst, Mat& out, Mat& inliers, double ransacThreshold = 3, double confidence = 0.99)
+    //
+
+    /**
+     * Computes an optimal translation between two 3D point sets.
+     *
+     * It computes
+     * \(
+     * \begin{bmatrix}
+     * x\\
+     * y\\
+     * z\\
+     * \end{bmatrix}
+     * =
+     * \begin{bmatrix}
+     * X\\
+     * Y\\
+     * Z\\
+     * \end{bmatrix}
+     * +
+     * \begin{bmatrix}
+     * b_1\\
+     * b_2\\
+     * b_3\\
+     * \end{bmatrix}
+     * \)
+     *
+     * @param src First input 3D point set containing \((X,Y,Z)\).
+     * @param dst Second input 3D point set containing \((x,y,z)\).
+     * @param out Output 3D translation vector \(3 \times 1\) of the form
+     * \(
+     * \begin{bmatrix}
+     * b_1 \\
+     * b_2 \\
+     * b_3 \\
+     * \end{bmatrix}
+     * \)
+     * @param inliers Output vector indicating which points are inliers (1-inlier, 0-outlier).
+     * @param ransacThreshold Maximum reprojection error in the RANSAC algorithm to consider a point as
+     * an inlier.
+     * @param confidence Confidence level, between 0 and 1, for the estimated transformation. Anything
+     * between 0.95 and 0.99 is usually good enough. Values too close to 1 can slow down the estimation
+     * significantly. Values lower than 0.8-0.9 can result in an incorrectly estimated transformation.
+     *
+     * The function estimates an optimal 3D translation between two 3D point sets using the
+     * RANSAC algorithm.
+     *
+     * @return automatically generated
+     */
+    public static int estimateTranslation3D(Mat src, Mat dst, Mat out, Mat inliers, double ransacThreshold, double confidence) {
+        return estimateTranslation3D_0(src.nativeObj, dst.nativeObj, out.nativeObj, inliers.nativeObj, ransacThreshold, confidence);
+    }
+
+    /**
+     * Computes an optimal translation between two 3D point sets.
+     *
+     * It computes
+     * \(
+     * \begin{bmatrix}
+     * x\\
+     * y\\
+     * z\\
+     * \end{bmatrix}
+     * =
+     * \begin{bmatrix}
+     * X\\
+     * Y\\
+     * Z\\
+     * \end{bmatrix}
+     * +
+     * \begin{bmatrix}
+     * b_1\\
+     * b_2\\
+     * b_3\\
+     * \end{bmatrix}
+     * \)
+     *
+     * @param src First input 3D point set containing \((X,Y,Z)\).
+     * @param dst Second input 3D point set containing \((x,y,z)\).
+     * @param out Output 3D translation vector \(3 \times 1\) of the form
+     * \(
+     * \begin{bmatrix}
+     * b_1 \\
+     * b_2 \\
+     * b_3 \\
+     * \end{bmatrix}
+     * \)
+     * @param inliers Output vector indicating which points are inliers (1-inlier, 0-outlier).
+     * @param ransacThreshold Maximum reprojection error in the RANSAC algorithm to consider a point as
+     * an inlier.
+     * between 0.95 and 0.99 is usually good enough. Values too close to 1 can slow down the estimation
+     * significantly. Values lower than 0.8-0.9 can result in an incorrectly estimated transformation.
+     *
+     * The function estimates an optimal 3D translation between two 3D point sets using the
+     * RANSAC algorithm.
+     *
+     * @return automatically generated
+     */
+    public static int estimateTranslation3D(Mat src, Mat dst, Mat out, Mat inliers, double ransacThreshold) {
+        return estimateTranslation3D_1(src.nativeObj, dst.nativeObj, out.nativeObj, inliers.nativeObj, ransacThreshold);
+    }
+
+    /**
+     * Computes an optimal translation between two 3D point sets.
+     *
+     * It computes
+     * \(
+     * \begin{bmatrix}
+     * x\\
+     * y\\
+     * z\\
+     * \end{bmatrix}
+     * =
+     * \begin{bmatrix}
+     * X\\
+     * Y\\
+     * Z\\
+     * \end{bmatrix}
+     * +
+     * \begin{bmatrix}
+     * b_1\\
+     * b_2\\
+     * b_3\\
+     * \end{bmatrix}
+     * \)
+     *
+     * @param src First input 3D point set containing \((X,Y,Z)\).
+     * @param dst Second input 3D point set containing \((x,y,z)\).
+     * @param out Output 3D translation vector \(3 \times 1\) of the form
+     * \(
+     * \begin{bmatrix}
+     * b_1 \\
+     * b_2 \\
+     * b_3 \\
+     * \end{bmatrix}
+     * \)
+     * @param inliers Output vector indicating which points are inliers (1-inlier, 0-outlier).
+     * an inlier.
+     * between 0.95 and 0.99 is usually good enough. Values too close to 1 can slow down the estimation
+     * significantly. Values lower than 0.8-0.9 can result in an incorrectly estimated transformation.
+     *
+     * The function estimates an optimal 3D translation between two 3D point sets using the
+     * RANSAC algorithm.
+     *
+     * @return automatically generated
+     */
+    public static int estimateTranslation3D(Mat src, Mat dst, Mat out, Mat inliers) {
+        return estimateTranslation3D_2(src.nativeObj, dst.nativeObj, out.nativeObj, inliers.nativeObj);
     }
 
 
@@ -11457,6 +11624,11 @@ public class Calib3d {
     private static native int estimateAffine3D_0(long src_nativeObj, long dst_nativeObj, long out_nativeObj, long inliers_nativeObj, double ransacThreshold, double confidence);
     private static native int estimateAffine3D_1(long src_nativeObj, long dst_nativeObj, long out_nativeObj, long inliers_nativeObj, double ransacThreshold);
     private static native int estimateAffine3D_2(long src_nativeObj, long dst_nativeObj, long out_nativeObj, long inliers_nativeObj);
+
+    // C++:  int cv::estimateTranslation3D(Mat src, Mat dst, Mat& out, Mat& inliers, double ransacThreshold = 3, double confidence = 0.99)
+    private static native int estimateTranslation3D_0(long src_nativeObj, long dst_nativeObj, long out_nativeObj, long inliers_nativeObj, double ransacThreshold, double confidence);
+    private static native int estimateTranslation3D_1(long src_nativeObj, long dst_nativeObj, long out_nativeObj, long inliers_nativeObj, double ransacThreshold);
+    private static native int estimateTranslation3D_2(long src_nativeObj, long dst_nativeObj, long out_nativeObj, long inliers_nativeObj);
 
     // C++:  int cv::recoverPose(Mat E, Mat points1, Mat points2, Mat& R, Mat& t, double focal = 1.0, Point2d pp = Point2d(0, 0), Mat& mask = Mat())
     private static native int recoverPose_0(long E_nativeObj, long points1_nativeObj, long points2_nativeObj, long R_nativeObj, long t_nativeObj, double focal, double pp_x, double pp_y, long mask_nativeObj);

@@ -13,7 +13,8 @@ public class Videoio {
     public static final int
             VIDEOWRITER_PROP_QUALITY = 1,
             VIDEOWRITER_PROP_FRAMEBYTES = 2,
-            VIDEOWRITER_PROP_NSTRIPES = 3;
+            VIDEOWRITER_PROP_NSTRIPES = 3,
+            VIDEOWRITER_PROP_IS_COLOR = 4;
 
 
     // C++: enum VideoCaptureProperties

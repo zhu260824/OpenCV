@@ -3,17 +3,17 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 group='com.github.zhu260824'
 
-def openCVersionName = "4.3.0"
-def openCVersionCode = ((4 * 100 + 3) * 100 + 0) * 10 + 0
+def openCVersionName = "4.4.0"
+def openCVersionCode = ((4 * 100 + 4) * 100 + 0) * 10 + 0
 
 println "OpenCV: " +openCVersionName + "OpenCV Code: " + openCVersionCode
 println "projectDir: " + project.projectDir.toString()
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 26
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 29
+        minSdkVersion 21
+        targetSdkVersion 26
         versionCode openCVersionCode
         versionName openCVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

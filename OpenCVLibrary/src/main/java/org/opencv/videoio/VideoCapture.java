@@ -46,6 +46,104 @@ public class VideoCapture {
     public static VideoCapture __fromPtr__(long addr) { return new VideoCapture(addr); }
 
     //
+    // C++:   cv::VideoCapture::VideoCapture(String filename, int apiPreference = CAP_ANY)
+    //
+
+    /**
+     *
+     *      Opens a video file or a capturing device or an IP video stream for video capturing with API Preference
+     *
+     *     @param filename it can be:
+     * <ul>
+     *   <li>
+     *      name of video file (eg. {@code video.avi})
+     *   </li>
+     *   <li>
+     *      or image sequence (eg. {@code img_%02d.jpg}, which will read samples like {@code img_00.jpg, img_01.jpg, img_02.jpg, ...})
+     *   </li>
+     *   <li>
+     *      or URL of video stream (eg. {@code protocol://host:port/script_name?script_params|auth})
+     *   </li>
+     *   <li>
+     *      or GStreamer pipeline string in gst-launch tool format in case if GStreamer is used as backend
+     *       Note that each video stream or IP camera feed has its own URL scheme. Please refer to the
+     *       documentation of source stream to know the right URL.
+     *     @param apiPreference preferred Capture API backends to use. Can be used to enforce a specific reader
+     *     implementation if multiple are available: e.g. cv::CAP_FFMPEG or cv::CAP_IMAGES or cv::CAP_DSHOW.
+     *   </li>
+     * </ul>
+     *
+     *     SEE: cv::VideoCaptureAPIs
+     */
+    public VideoCapture(String filename, int apiPreference) {
+        nativeObj = VideoCapture_0(filename, apiPreference);
+    }
+
+    /**
+     *
+     *      Opens a video file or a capturing device or an IP video stream for video capturing with API Preference
+     *
+     *     @param filename it can be:
+     * <ul>
+     *   <li>
+     *      name of video file (eg. {@code video.avi})
+     *   </li>
+     *   <li>
+     *      or image sequence (eg. {@code img_%02d.jpg}, which will read samples like {@code img_00.jpg, img_01.jpg, img_02.jpg, ...})
+     *   </li>
+     *   <li>
+     *      or URL of video stream (eg. {@code protocol://host:port/script_name?script_params|auth})
+     *   </li>
+     *   <li>
+     *      or GStreamer pipeline string in gst-launch tool format in case if GStreamer is used as backend
+     *       Note that each video stream or IP camera feed has its own URL scheme. Please refer to the
+     *       documentation of source stream to know the right URL.
+     *     implementation if multiple are available: e.g. cv::CAP_FFMPEG or cv::CAP_IMAGES or cv::CAP_DSHOW.
+     *   </li>
+     * </ul>
+     *
+     *     SEE: cv::VideoCaptureAPIs
+     */
+    public VideoCapture(String filename) {
+        nativeObj = VideoCapture_1(filename);
+    }
+
+
+    //
+    // C++:   cv::VideoCapture::VideoCapture(int index, int apiPreference = CAP_ANY)
+    //
+
+    /**
+     *
+     *      Opens a camera for video capturing
+     *
+     *     @param index id of the video capturing device to open. To open default camera using default backend just pass 0.
+     *     (to backward compatibility usage of camera_id + domain_offset (CAP_*) is valid when apiPreference is CAP_ANY)
+     *     @param apiPreference preferred Capture API backends to use. Can be used to enforce a specific reader
+     *     implementation if multiple are available: e.g. cv::CAP_DSHOW or cv::CAP_MSMF or cv::CAP_V4L.
+     *
+     *     SEE: cv::VideoCaptureAPIs
+     */
+    public VideoCapture(int index, int apiPreference) {
+        nativeObj = VideoCapture_2(index, apiPreference);
+    }
+
+    /**
+     *
+     *      Opens a camera for video capturing
+     *
+     *     @param index id of the video capturing device to open. To open default camera using default backend just pass 0.
+     *     (to backward compatibility usage of camera_id + domain_offset (CAP_*) is valid when apiPreference is CAP_ANY)
+     *     implementation if multiple are available: e.g. cv::CAP_DSHOW or cv::CAP_MSMF or cv::CAP_V4L.
+     *
+     *     SEE: cv::VideoCaptureAPIs
+     */
+    public VideoCapture(int index) {
+        nativeObj = VideoCapture_3(index);
+    }
+
+
+    //
     // C++:   cv::VideoCapture::VideoCapture()
     //
 
@@ -56,22 +154,8 @@ public class VideoCapture {
      *     destructor.
      */
     public VideoCapture() {
-        nativeObj = VideoCapture_0();
+        nativeObj = VideoCapture_4();
     }
-
-
-    //
-    // C++:  explicit cv::VideoCapture::VideoCapture(String filename, int apiPreference = CAP_ANY)
-    //
-
-    // Return type 'explicit' is not supported, skipping the function
-
-
-    //
-    // C++:  explicit cv::VideoCapture::VideoCapture(int index, int apiPreference = CAP_ANY)
-    //
-
-    // Return type 'explicit' is not supported, skipping the function
 
 
     //
@@ -369,8 +453,16 @@ public class VideoCapture {
 
 
 
+    // C++:   cv::VideoCapture::VideoCapture(String filename, int apiPreference = CAP_ANY)
+    private static native long VideoCapture_0(String filename, int apiPreference);
+    private static native long VideoCapture_1(String filename);
+
+    // C++:   cv::VideoCapture::VideoCapture(int index, int apiPreference = CAP_ANY)
+    private static native long VideoCapture_2(int index, int apiPreference);
+    private static native long VideoCapture_3(int index);
+
     // C++:   cv::VideoCapture::VideoCapture()
-    private static native long VideoCapture_0();
+    private static native long VideoCapture_4();
 
     // C++:  String cv::VideoCapture::getBackendName()
     private static native String getBackendName_0(long nativeObj);
